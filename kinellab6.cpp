@@ -1,3 +1,37 @@
+
+/*****************************
+        SHADOW MAPPING:
+*****************************/
+/*
+To create shadow mapping first you need to compute the shadow map.
+In order to do this you render the scene from the point of view of the light.
+This requires you to add an extra fragment shader for shadow mapping and an extra vertex 
+shader for shadow mapping.
+
+After rendering the shadow mapping you save the shadow as a texture & use it similarly
+to texture mapping.
+
+Next you need to render the scene normally, (from the point of view of the camera) but
+use the depth data to to render the shadow map & objects.
+The shadow fragment shader & vertex shader are responsible for creating the shadow and
+the regular fragment shader & vertex shader create the objects.
+
+In the shadow fragment shader you use the z coordinate as the depth to 
+look at the scene from the perspective of the light. The pixels that the light 
+doesn't see is where its going to be a shadow.
+In the shadow vertex shader you multiply the vertex position by the depth
+to use the light's perspective.
+
+In the regular vertex shader you create it like you normally would, but then
+have to create a new variable for the shadow coordinates that will be the position of the
+vertex from the perspective of the light.
+In the regular fragment shader you create it like you normally would, but then
+have to create a new variable for visibility. The closer the shadow map is to the light,
+the lower you set the visibility.
+
+****************************************************************************************/
+
+
 #include "initShaders.h"
 #include <cstdlib>
 using namespace std;
@@ -21,7 +55,7 @@ GLfloat vertices[]={
 	-10.0f,-10.0f,-10.0f,
 	10.0f,-10.0f,-10.0f,
 	10.0f,10.0f,-10.0f
-			};
+					};
 
 GLfloat colors[]={
 	1.0f,0.0f,0.0f,1.0f,
